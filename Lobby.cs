@@ -2,21 +2,43 @@
 {
     internal class Lobby : Screen
     {
+        static List<int> mainList;
         public override Screen Start()
         {
-            ResizeWindow();
-            ClearConsole();
-            Console.CursorVisible = false;
-            PrintText($"Welcome to the Algorithm-Sorting-System!\n");
-            GetWishedStartList();
-            return new Algorithm();
+            GetStarted();
+
+            var key = ReadKey(true);
+            if (key.Key == ConsoleKey.Escape)
+            {
+                Lobby lobby = new Lobby();
+                return lobby;
+            }
+            else
+            {
+                Algorithm algorithm = new Algorithm();
+                return algorithm;
+            }
         }
 
-        void GetWishedStartList()
+        void GetStarted()
+        {
+            mainList = new List<int>();
+            ResizeWindow();
+            SetDefaultColors();
+            ClearConsole();
+            Console.CursorVisible = false;
+
+            PrintText($"Welcome to the Algorithm-Sorting-System!\n");
+            GetWishedStartingList();
+
+            PrintText("Press ", "ESC", " to restart or any other ", "Key", " to continue.");
+        }
+
+        void GetWishedStartingList()
         {
             PrintText("To get started, first select a list of numbers:\n");
-            PrintText("(1) Get random");
-            PrintText("(2) Set own");
+            PrintText("(", "1", ") Get random");
+            PrintText("(", "2", ") Set own");
             GetTextSpacements();
 
             while (true)
@@ -35,38 +57,42 @@
             }
         }
 
-        Screen GetRandomStartList()
+        void GetRandomStartList()
         {
             PrintText("(1) Choose the size of your random list (3 - 10 | you can add more later):");
             while (true)
             {
                 var input = ReadLine();
                 input = Check0Value(input) ? "0" : input;
-                if (int.TryParse(input, out int listSize) && listSize >= 0 && listSize <= 10) //Max size = 10
+                if (int.TryParse(input, out int listSize) && listSize >= 0)
                 {
                     if (listSize < 3) //Min size = 3
                     {
-                        PrintText($"\n   You chose {listSize},wich is too low, so it got changed to 3:");
+                        PrintText($"\n   You chose {listSize}, wich is too low, so it got changed to 3:");
                         listSize = 3;
+                    }
+                    else if (listSize > 100) //Max size = 10
+                    {
+                        PrintText($"\n   You chose {listSize}, wich is too high, so it got changed to 10:");
+                        listSize = 10;
                     }
                     else PrintText($"\n   You now have a list with {listSize} numbers:");
 
                     for (int i = 0; i < listSize; i++)
-                        mainList.Add(rnd.Next(0, 100));
+                        mainList.Add(rnd.Next(1, 1000)); //Min number 1 //Max number 999 
+
                     PrintList(mainList);
                     break;
                 }
-                ClearLine(input.Length);
+                else ClearLine(input.Length);
             }
-            return null;
         }
 
-        List<int> GetInputStartList()
+        void GetInputStartList()
         {
-            var inputList = new List<int>();
             int intsAdded = 0;
-            PrintText($"(2) Press \"Enter\" to open the typing field.");
-            PrintText($"Once you have at least 3 numbers, press \"ESC\" to finish this process.");
+            PrintText($"(2) Press ", "Enter", " to open the typing field.");
+            PrintText($"Once you have at least 3 numbers, press ", "ESC", " to finish this process.");
             while (true)
             {
                 var key = ReadKey(true);
@@ -78,16 +104,19 @@
                         input = Check0Value(input) ? "0" : input;
                         if (int.TryParse(input, out int toAdd) && toAdd > 0 && toAdd < 1000) //Min number 1 //Max number 999 
                         {
-                            inputList.Add(toAdd);
-                            PrintText($"You added {toAdd} to the list:");
-                            PrintList(inputList);
-                            PrintText($"Press \"Enter\" to add your next number.");
+                            intsAdded++;
+                            mainList.Add(toAdd); 
+                            PrintText($"{intsAdded}: You added {toAdd} to the list:");
+                            PrintList(mainList);
                             break;
                         }
                         ClearLine(input.Length);
                     }
-                    intsAdded++;
-                    if (intsAdded < 10) continue; //Max StartList size = 10
+                    if (intsAdded < 10) //Max StartList size = 10
+                    {
+                        PrintText($"Press ", "Enter", " to add your next number."); 
+                        continue;
+                    }
                     else break;
                 }
                 else if (key.Key == ConsoleKey.Escape) //Exit
@@ -96,14 +125,16 @@
                     else break;
                 }
             }
-            return inputList;
         }
+
+        public static List<int> GetList() { return mainList; }
 
         bool Check0Value(string _input) //Returns value 0 if lineInput is empty
         {
             if (_input == "")
             {
-                PrintText("0", -1);
+                TextMargin(-1);
+                PrintText("0");
                 return true;
             }
             else return false;

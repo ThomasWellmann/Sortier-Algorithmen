@@ -2,32 +2,57 @@
 {
     internal abstract class Screen
     {
-        readonly int textMargin = 3;
-        protected List<int> mainList = new List<int>(); 
+        protected readonly static int textMargin = 3;
+        readonly static ConsoleColor defaultFColor = ConsoleColor.White;
+        readonly static ConsoleColor defaultBColor = ConsoleColor.DarkBlue;
+        readonly static ConsoleColor keyFColor = ConsoleColor.Green;
+        readonly static ConsoleColor KeyBColor = ConsoleColor.Magenta;
         protected Random rnd = new(DateTime.Now.Millisecond);
 
         public abstract Screen Start();
 
-        protected void ResizeWindow(int _width = 100, int _height = 50)
+        protected static void ResizeWindow(int _width = 0, int _height = 0)
         {
+            if (_width == 0 && _height == 0)
+            {
+                _width = Console.LargestWindowWidth;
+                _height = Console.LargestWindowHeight;
+            }
             Console.SetWindowPosition(0, 0);
             Console.SetWindowSize(_width, _height);
             Console.SetBufferSize(_width, 1000);
         }
 
-        protected void PrintList(List<int> _list)
+        protected static void SetDefaultColors()
         {
-            TextMargin();
-            Console.Write("[ ");
-            for (int i = 0; i < _list.Count; i++)
-            {
-                Console.Write(_list[i]);
-                if (i != _list.Count - 1) Console.Write(" | ");
-            }
-            Console.Write(" ]\n");
+            Console.ForegroundColor = defaultFColor;
+            Console.BackgroundColor = defaultBColor;
         }
 
-        protected ConsoleKeyInfo ReadKey(bool _intercept = false)
+        protected static void SetKeyColors()
+        {
+            Console.ForegroundColor = keyFColor;
+            Console.BackgroundColor = KeyBColor;
+        }
+
+        protected static string PrintList(List<int> _list, bool _print = true)
+        {
+            string list = "[ ";
+            for (int i = 0; i < _list.Count; i++)
+            {
+                list += _list[i];
+                list += (i != _list.Count - 1) ? " | " : "";
+            }
+            list += " ]";
+            if (_print)
+            {
+                PrintText($"{list}\n");
+                return null;
+            }
+            else return list;
+        }
+
+        protected static ConsoleKeyInfo ReadKey(bool _intercept = false)
         {
             TextMargin();
             Console.CursorVisible = !_intercept;
@@ -36,7 +61,7 @@
             return keyInput;
         }
 
-        protected string ReadLine()
+        protected static string ReadLine()
         {
             TextMargin();
             Console.CursorVisible = true;
@@ -45,30 +70,48 @@
             return lineInput;
         }
 
-        protected void TextMargin(int _offset = 0)
+        protected static void TextMargin(int _offset = 0)
         {
             Console.SetCursorPosition(textMargin, Console.GetCursorPosition().Top + _offset);
         }
-        protected void PrintText(string _text, int _offSet = 0) //WriteLine with sidespace
+
+        protected static void PrintText(string _text1, string _key1 = "", string _text2 = "", string _key2 = "", string _text3 = "") //WriteLine with sidespace
         {
-            TextMargin(_offSet);
-            Console.WriteLine(_text);
+            TextMargin();
+            Console.Write((_key1 == "") ? $"{_text1}\n" : _text1);
+            if (_key1 != "")
+            {
+                SetKeyColors();
+                Console.Write(_key1);
+                SetDefaultColors();
+                Console.Write((_key2 == "") ? $"{_text2}\n" : _text2);
+            }
+            if (_key2 != "")
+            {
+                SetKeyColors();
+                Console.Write(_key2);
+                SetDefaultColors();
+                Console.Write($"{_text3}\n");
+            }
         }
 
-        protected void ClearConsole()
+        protected static void ClearConsole()
         {
             Console.Clear();
             Console.WriteLine();
         }
 
-        protected void GetTextSpacements()
+        protected static void GetTextSpacements()
         {
             Console.WriteLine();
-            Console.WriteLine("----------------------------------------------------------------------------------------------------");
-            Console.WriteLine();
+
+            for (int i = 0; i < Console.WindowWidth; i++)
+                Console.Write('-');
+
+            Console.WriteLine("\n");
         }
 
-        protected void Loop()
+        protected static void Loop()
         {
             ConsoleKeyInfo key;
             do
