@@ -2,7 +2,9 @@
 {
     internal abstract class Screen
     {
+        protected static List<int> mainList;
         protected readonly static int textMargin = 3;
+        protected readonly static int dobbleTMargin = 6;
         readonly static ConsoleColor defaultFColor = ConsoleColor.White;
         readonly static ConsoleColor defaultBColor = ConsoleColor.DarkBlue;
         readonly static ConsoleColor keyFColor = ConsoleColor.Green;
@@ -35,21 +37,38 @@
             Console.BackgroundColor = KeyBColor;
         }
 
-        protected static string PrintList(List<int> _list, bool _print = true)
+        protected static void PrintList(List<int> _list)
         {
-            string list = "[ ";
+            string list1 = "[ ";
             for (int i = 0; i < _list.Count; i++)
             {
-                list += _list[i];
-                list += (i != _list.Count - 1) ? " | " : "";
+                list1 += _list[i];
+                list1 += (i != _list.Count - 1) ? " | " : "";
             }
-            list += " ]";
-            if (_print)
+            list1 += " ]";
+
+            if (list1.Length + dobbleTMargin > Console.LargestWindowWidth) //list too long = list/2
             {
-                PrintText($"{list}\n");
-                return null;
+                list1 = "[ ";
+                string list2 = "";
+                for (int i = 0; i < _list.Count / 2; i++) // 1/2
+                {
+                    list1 += _list[i];
+                    list1 += (i != _list.Count - 1) ? " | " : "";
+                }
+                for (int i = _list.Count / 2; i < _list.Count; i++) // 2/2
+                {
+                    list2 += _list[i];
+                    list2 += (i != _list.Count - 1) ? " | " : "";
+                }
+                list2 += " ]";
+
+                Print(list1);
+                Print(list2);
+
+                Console.WriteLine();
             }
-            else return list;
+            else Print($"{list1}\n");
         }
 
         protected static ConsoleKeyInfo ReadKey(bool _intercept = false)
@@ -75,7 +94,7 @@
             Console.SetCursorPosition(textMargin, Console.GetCursorPosition().Top + _offset);
         }
 
-        protected static void PrintText(string _text1, string _key1 = "", string _text2 = "", string _key2 = "", string _text3 = "") //WriteLine with sidespace
+        protected static void Print(string _text1, string _key1 = "", string _text2 = "", string _key2 = "", string _text3 = "") //WriteLine with sidespace
         {
             TextMargin();
             Console.Write((_key1 == "") ? $"{_text1}\n" : _text1);

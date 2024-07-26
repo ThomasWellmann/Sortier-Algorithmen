@@ -2,22 +2,13 @@
 {
     internal class Lobby : Screen
     {
-        static List<int> mainList;
         public override Screen Start()
         {
             GetStarted();
 
             var key = ReadKey(true);
-            if (key.Key == ConsoleKey.Escape)
-            {
-                Lobby lobby = new Lobby();
-                return lobby;
-            }
-            else
-            {
-                Algorithm algorithm = new Algorithm();
-                return algorithm;
-            }
+            if (key.Key == ConsoleKey.Escape) return new Lobby();
+            else return new Algorithm();
         }
 
         void GetStarted()
@@ -28,17 +19,17 @@
             ClearConsole();
             Console.CursorVisible = false;
 
-            PrintText($"Welcome to the Algorithm-Sorting-System!\n");
+            Print($"Welcome to the Algorithm-Sorting-System!\n");
             GetWishedStartingList();
 
-            PrintText("Press ", "ESC", " to restart or any other ", "Key", " to continue.");
+            Print("Press ", "ESC", " to restart or any other ", "Key", " to continue.");
         }
 
         void GetWishedStartingList()
         {
-            PrintText("To get started, first select a list of numbers:\n");
-            PrintText("(", "1", ") Get random");
-            PrintText("(", "2", ") Set own");
+            Print("To get started, first select a list of numbers:\n");
+            Print("(", "1", ") Get random");
+            Print("(", "2", ") Set own");
             GetTextSpacements();
 
             while (true)
@@ -59,7 +50,7 @@
 
         void GetRandomStartList()
         {
-            PrintText("(1) Choose the size of your random list (3 - 10 | you can add more later):");
+            Print("(1) Choose the size of your random list (3 - 75 | you can add more later):");
             while (true)
             {
                 var input = ReadLine();
@@ -68,15 +59,15 @@
                 {
                     if (listSize < 3) //Min size = 3
                     {
-                        PrintText($"\n   You chose {listSize}, wich is too low, so it got changed to 3:");
+                        Print($"\n   You chose {listSize}, wich is too low, so it got changed to 3:");
                         listSize = 3;
                     }
-                    else if (listSize > 100) //Max size = 10
+                    else if (listSize > 75) //Max size = 75
                     {
-                        PrintText($"\n   You chose {listSize}, wich is too high, so it got changed to 10:");
-                        listSize = 10;
+                        Print($"\n   You chose {listSize}, wich is too high, so it got changed to 75:");
+                        listSize = 75;
                     }
-                    else PrintText($"\n   You now have a list with {listSize} numbers:");
+                    else Print($"\n   You now have a list with {listSize} numbers:");
 
                     for (int i = 0; i < listSize; i++)
                         mainList.Add(rnd.Next(1, 1000)); //Min number 1 //Max number 999 
@@ -91,8 +82,8 @@
         void GetInputStartList()
         {
             int intsAdded = 0;
-            PrintText($"(2) Press ", "Enter", " to open the typing field.");
-            PrintText($"Once you have at least 3 numbers, press ", "ESC", " to finish this process.");
+            Print($"(2) Press ", "Enter", " to open the typing field.");
+            Print($"Once you have at least 3 numbers, press ", "ESC", " to finish this process.");
             while (true)
             {
                 var key = ReadKey(true);
@@ -106,15 +97,15 @@
                         {
                             intsAdded++;
                             mainList.Add(toAdd); 
-                            PrintText($"{intsAdded}: You added {toAdd} to the list:");
+                            Print($"{intsAdded}: You added {toAdd} to the list:");
                             PrintList(mainList);
                             break;
                         }
                         ClearLine(input.Length);
                     }
-                    if (intsAdded < 10) //Max StartList size = 10
+                    if (intsAdded < 75) //Max StartList size = 75
                     {
-                        PrintText($"Press ", "Enter", " to add your next number."); 
+                        Print($"Press ", "Enter", " to add your next number."); 
                         continue;
                     }
                     else break;
@@ -134,7 +125,7 @@
             if (_input == "")
             {
                 TextMargin(-1);
-                PrintText("0");
+                Print("0");
                 return true;
             }
             else return false;
