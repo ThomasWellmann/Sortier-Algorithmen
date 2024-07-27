@@ -8,7 +8,7 @@
 
             var key = ReadKey(true);
             if (key.Key == ConsoleKey.Escape) return new Lobby();
-            else return new Algorithm();
+            else return new Sorting();
         }
 
         void GetStarted()
@@ -50,7 +50,7 @@
 
         void GetRandomStartList()
         {
-            Print("(1) Choose the size of your random list (3 - 75 | you can add more later):");
+            Print("(1) Choose the size of your random list (3 - 75):");
             while (true)
             {
                 var input = ReadLine();
