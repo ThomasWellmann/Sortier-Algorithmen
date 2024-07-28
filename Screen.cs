@@ -130,6 +130,13 @@
             Console.WriteLine("\n");
         }
 
+        protected static void ClearLine(int _tLength) //If lineInput is not valid, clears it
+        {
+            TextMargin(-1);
+            for (int i = 0; i < _tLength; i++)
+                Console.Write(' ');
+        }
+
         protected static void Loop()
         {
             ConsoleKeyInfo key;

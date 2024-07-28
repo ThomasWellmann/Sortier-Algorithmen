@@ -6,9 +6,14 @@
         {
             GetStarted();
 
-            var key = ReadKey(true);
-            if (key.Key == ConsoleKey.Escape) return new Lobby();
-            else return new Sorting();
+            Print("Press ", "Enter", " to continue or ", "ESC", " restart the program.");
+
+            while (true)
+            {
+                var key = ReadKey(true);
+                if (key.Key == ConsoleKey.Escape) return new Lobby();
+                else if (key.Key == ConsoleKey.Enter) return new Sorting();
+            }
         }
 
         void GetStarted()
@@ -21,8 +26,6 @@
 
             Print($"Welcome to the Algorithm-Sorting-System!\n");
             GetWishedStartingList();
-
-            Print("Press ", "ESC", " to restart or any other ", "Key", " to continue.");
         }
 
         void GetWishedStartingList()
@@ -96,7 +99,7 @@
                         if (int.TryParse(input, out int toAdd) && toAdd > 0 && toAdd < 1000) //Min number 1 //Max number 999 
                         {
                             intsAdded++;
-                            mainList.Add(toAdd); 
+                            mainList.Add(toAdd);
                             Print($"{intsAdded}: You added {toAdd} to the list:");
                             PrintList(mainList);
                             break;
@@ -105,7 +108,7 @@
                     }
                     if (intsAdded < 75) //Max StartList size = 75
                     {
-                        Print($"Press ", "Enter", " to add your next number."); 
+                        Print($"Press ", "Enter", " to add your next number.");
                         continue;
                     }
                     else break;
@@ -131,11 +134,5 @@
             else return false;
         }
 
-        void ClearLine(int _tLength) //If lineInput is not valid, clears it
-        {
-            TextMargin(-1);
-            for (int i = 0; i < _tLength; i++)
-                Console.Write(' ');
-        }
     }
 }
