@@ -4,6 +4,7 @@
     {
         public override Screen Start()
         {
+            mainList = new List<int>();
             GetStarted();
 
             Print("Press ", "Enter", " to continue or ", "ESC", " restart the program.");
@@ -12,13 +13,12 @@
             {
                 var key = ReadKey(true);
                 if (key.Key == ConsoleKey.Escape) return new Lobby();
-                else if (key.Key == ConsoleKey.Enter) return new Sorting();
+                else if (key.Key == ConsoleKey.Enter) return new Sorting(mainList);
             }
         }
 
         void GetStarted()
         {
-            mainList = new List<int>();
             ResizeWindow();
             SetDefaultColors();
             ClearConsole();
@@ -38,16 +38,10 @@
             while (true)
             {
                 var key = ReadKey(true);
-                if (key.Key == ConsoleKey.D1)
-                {
-                    GetRandomStartList();
-                    break;
-                }
-                else if (key.Key == ConsoleKey.D2)
-                {
-                    GetInputStartList();
-                    break;
-                }
+                if (key.Key == ConsoleKey.D1) GetRandomStartList();
+                else if (key.Key == ConsoleKey.D2) GetInputStartList();
+                else continue;
+                break;
             }
         }
 
