@@ -2,7 +2,7 @@
 {
     internal abstract class Screen
     {
-        protected static List<int> mainList;
+        protected static List<int> list;
         protected readonly static int textMargin = 3;
         protected readonly static int dobbleTMargin = 6;
         readonly static ConsoleColor defaultFColor = ConsoleColor.White;
@@ -87,6 +87,17 @@
             var lineInput = Console.ReadLine();
             Console.CursorVisible = false;
             return lineInput;
+        }
+
+        protected bool Check0Value(string _input) //Returns value 0 if lineInput is empty
+        {
+            if (_input == "")
+            {
+                TextMargin(-1);
+                Print("0");
+                return true;
+            }
+            else return false;
         }
 
         protected static void TextMargin(int _offset = 0)

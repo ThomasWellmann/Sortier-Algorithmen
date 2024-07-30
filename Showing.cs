@@ -16,7 +16,7 @@ namespace Sortier_Algorithmen
         public override Screen Start()
         {
             ClearConsole();
-            Print($"Your List (size: {mainList.Count}):");
+            Print($"Your List (size: {list.Count}):");
             PrintList(algorithm.list);
             GetTextSpacements();
 
@@ -42,11 +42,12 @@ namespace Sortier_Algorithmen
                 {
                     if (algorithm.list.Count < 75)
                     {
-                        Print("Type below the number you want to add.");
+                        Print("Type below the number you want to add (0-999).");
                         while (true)
                         {
                             var input = ReadLine();
-                            if (int.TryParse(input, out toAdd) && toAdd > 0 && toAdd < 1000) //Min number 1 //Max number 999 
+                            input = Check0Value(input) ? "0" : input; //Field empty -> value = 0
+                            if (int.TryParse(input, out toAdd) && toAdd >= 0 && toAdd < 1000) //Min number 0 //Max number 999 
                             {
                                 Console.WriteLine();
                                 algorithm.Add(toAdd, shownAs);
@@ -64,7 +65,7 @@ namespace Sortier_Algorithmen
                 else if (key.Key == ConsoleKey.D2)
                 {
                     shownAs = "increscent";
-                    algorithm.Sort(sortAlgorithm);
+                    algorithm.Increscent();
                 }
                 else if (key.Key == ConsoleKey.D3)
                 {
